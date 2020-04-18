@@ -16,8 +16,10 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
+import sample.grid.BoundaryCondition;
 import sample.grid.CurrentGrid;
 import sample.grid.EmbryoTemplates;
+import sample.grid.Neighbourhoods;
 import sample.simulation.CellPainter;
 import sample.simulation.LifeSimulation;
 
@@ -25,6 +27,9 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Function;
+
+import static sample.grid.BoundaryCondition.*;
+import static sample.grid.Neighbourhoods.getNeighbourhoodForName;
 
 public class Controller implements Initializable {
     private final Function<String, Boolean> CUSTOM_MODE_ON = "komp. własna"::equals;
@@ -71,11 +76,10 @@ public class Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         CANVAS_HEIGHT = (int) canvas.getHeight();
         CANVAS_WIDTH = (int) canvas.getWidth();
-        SCALE = 4;
+        SCALE = 10;
         gc = canvas.getGraphicsContext2D();
         currentGrid = new CurrentGrid(CANVAS_WIDTH, CANVAS_HEIGHT, SCALE, 0);
         painter = new CellPainter(gc, SCALE);
-        lifeSimulation = new LifeSimulation();
         clearCanvas();
         //drawGridLines(CANVAS_WIDTH, CANVAS_HEIGHT);
 
@@ -92,6 +96,9 @@ public class Controller implements Initializable {
 
     private void setButtons() {
         startButton.setOnAction(event -> {
+            String neighbourhood = (String) neighbourhoodChoiceBox.getValue();
+            String boundaryCondition = (String) boundaryConditionChoiceBox.getValue();
+            lifeSimulation = new LifeSimulation(getNeighbourhoodForName(neighbourhood), getBoundaryConditionForName(boundaryCondition));
             setNumberOfIterations();
             timeline.play();
             canvas.setOnMouseClicked(event1 -> {
@@ -118,7 +125,7 @@ public class Controller implements Initializable {
     }
 
     private void setNumberOfIterations() {
-        Duration delayBetweenMessages = Duration.seconds(1);
+        Duration delayBetweenMessages = Duration.millis(500);
         Duration frame = delayBetweenMessages;
         timeline.setCycleCount(Timeline.INDEFINITE);
         int iterations=1;
@@ -130,16 +137,33 @@ public class Controller implements Initializable {
     }
 
     private void prepareChoiceBoxes() {
-        List<String> templates = EmbryoTemplates.getTemplates();
-        ObservableList list = FXCollections.observableArrayList(templates);
-        embryoCreationChoiceBox.setItems(list);
-        embryoCreationChoiceBox.setValue(list.get(0));
+        prepareEmbryoChoiceBox();
+        prepareNeighbourhoodsChoiceBox();
+        prepareBoundaryConditionChoiceBox();
+    }
+
+    private void prepareEmbryoChoiceBox() {
+        ObservableList embryoTemplates = FXCollections.observableArrayList(EmbryoTemplates.getTemplates());
+        embryoCreationChoiceBox.setItems(embryoTemplates);
+        embryoCreationChoiceBox.setValue(embryoTemplates.get(0));
         embryoCreationChoiceBox.setOnAction(event -> {
             String template = (String) embryoCreationChoiceBox.getValue();
             String labelText = EmbryoTemplates.getPromptTextForTemplate(template);
             embryosNumberLabel.setText(labelText);
             embryosNumberLabel.setTextAlignment(TextAlignment.CENTER);
         });
+    }
+
+    private void prepareNeighbourhoodsChoiceBox() {
+        ObservableList neighbourhoods = FXCollections.observableArrayList(Neighbourhoods.getNeighbourhoods());
+        neighbourhoodChoiceBox.setItems(neighbourhoods);
+        neighbourhoodChoiceBox.setValue(neighbourhoods.get(0));
+    }
+
+    private void prepareBoundaryConditionChoiceBox() {
+        ObservableList boundaryConditions = FXCollections.observableArrayList(BoundaryCondition.getNames());
+        boundaryConditionChoiceBox.setItems(boundaryConditions);
+        boundaryConditionChoiceBox.setValue(boundaryConditions.get(0));
     }
 
     private void activateCanvas() {

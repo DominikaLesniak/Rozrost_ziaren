@@ -37,7 +37,7 @@ public class CurrentGrid {
     public void incrementCellValue(int i, int j) {
         int newValue;
         if (grid[i][j] == 0) {
-            newValue = embryosNumber + 1;
+            newValue = ++embryosNumber;
             Color newColor = generateNewColor();
             colorMap.put(newValue, newColor);
         }
