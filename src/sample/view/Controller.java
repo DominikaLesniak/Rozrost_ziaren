@@ -21,14 +21,13 @@ import sample.grid.CurrentGrid;
 import sample.grid.EmbryoTemplates;
 import sample.grid.Neighbourhoods;
 import sample.simulation.CellPainter;
-import sample.simulation.LifeSimulation;
+import sample.simulation.GrowthSimulation;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 
-import static sample.grid.BoundaryCondition.*;
+import static sample.grid.BoundaryCondition.getBoundaryConditionForName;
 import static sample.grid.Neighbourhoods.getNeighbourhoodForName;
 
 public class Controller implements Initializable {
@@ -69,7 +68,7 @@ public class Controller implements Initializable {
     private CellPainter painter;
     private GraphicsContext gc;
     private CurrentGrid currentGrid;
-    private LifeSimulation lifeSimulation;
+    private GrowthSimulation growthSimulation;
     private Timeline timeline;
 
     @Override
@@ -96,9 +95,10 @@ public class Controller implements Initializable {
 
     private void setButtons() {
         startButton.setOnAction(event -> {
+            timeline.stop();
             String neighbourhood = (String) neighbourhoodChoiceBox.getValue();
             String boundaryCondition = (String) boundaryConditionChoiceBox.getValue();
-            lifeSimulation = new LifeSimulation(getNeighbourhoodForName(neighbourhood), getBoundaryConditionForName(boundaryCondition));
+            growthSimulation = new GrowthSimulation(getNeighbourhoodForName(neighbourhood), getBoundaryConditionForName(boundaryCondition));
             setNumberOfIterations();
             timeline.play();
             canvas.setOnMouseClicked(event1 -> {
@@ -107,8 +107,8 @@ public class Controller implements Initializable {
         stopButton.setOnAction(event -> {
             timeline.stop();
             timeline.getKeyFrames().clear();
-            //if(embryoCreationChoiceBox.getValue())
-            activateCanvas();
+            if (CUSTOM_MODE_ON.apply((String) embryoCreationChoiceBox.getValue()))
+                activateCanvas();
         });
         resizeButton.setOnAction(event -> resizeGrid());
         embryosGeneratorButton.setOnAction(event -> {
@@ -116,7 +116,7 @@ public class Controller implements Initializable {
             int embryosNumber = getValueIfNumericAndNotEmpty(embryosNumberTextField.getText());
             int ray = getValueIfNumericAndNotEmpty(rayTextField.getText());
             try {
-                currentGrid = EmbryoTemplates.getGridForTemplate(template, currentGrid.getWidth(), currentGrid.getHeight(), embryosNumber, ray);
+                currentGrid = EmbryoTemplates.getGridForTemplate(template, currentGrid.getWidth(), currentGrid.getHeight(), SCALE, embryosNumber, ray);
                 painter.paintCurrentGridCells(currentGrid);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -130,7 +130,7 @@ public class Controller implements Initializable {
         timeline.setCycleCount(Timeline.INDEFINITE);
         int iterations=1;
         for (int i = 0; i < iterations; i++) {
-            timeline.getKeyFrames().add(new KeyFrame(frame, e -> lifeSimulation.generateNextGeneration(currentGrid)));
+            timeline.getKeyFrames().add(new KeyFrame(frame, e -> growthSimulation.generateNextStep(currentGrid)));
             timeline.getKeyFrames().add(new KeyFrame(frame, e -> painter.paintCurrentGridCells(currentGrid)));
             frame = frame.add(delayBetweenMessages);
         }

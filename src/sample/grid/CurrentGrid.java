@@ -14,10 +14,10 @@ public class CurrentGrid {
 
     private int[][] grid;
 
-    public CurrentGrid(int width, int height) {
+    public CurrentGrid(int width, int height, int scale) {
         this.width = width;
         this.height = height;
-        this.scale = 3;
+        this.scale = scale;
         this.embryosNumber = 0;
         this.colorMap = new HashMap<>();
         colorMap.put(0, Color.WHITE);

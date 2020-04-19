@@ -5,7 +5,6 @@ import sample.grid.BoundaryCondition;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class MooreNeighbourhood extends Neighbourhood {

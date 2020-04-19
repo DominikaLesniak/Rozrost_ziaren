@@ -11,20 +11,16 @@ public class EmbryoTemplates {
         return TEMPLATES;
     }
 
-    public static CurrentGrid getGridForTemplate(String template, int width, int height, int embryosNumber) throws Exception {
-        return getGridForTemplate(template, width, height, embryosNumber, 0);
-    }
-
-    public static CurrentGrid getGridForTemplate(String template, int width, int height, int embryosNumber, int ray) throws Exception {
+    public static CurrentGrid getGridForTemplate(String template, int width, int height, int scale, int embryosNumber, int ray) throws Exception {
         switch (template) {
             case "komp. własna":
                 return null;
             case "jednorodne":
-                return getUnchangeableGrid(width, height);
+                return getHomogeneousGrid(width, height, scale, embryosNumber);
             case "losowe":
-                return getGliderGrid(width, height);
+                return getRandomGrid(width, height, scale, embryosNumber);
             case "z promieniem":
-                return getOscilatorGrid(width, height);
+                return null;
             default:
                 throw new Exception("Nieznany wzorzec");
         }
@@ -37,57 +33,26 @@ public class EmbryoTemplates {
         return "Liczba zarodków";
     }
 
-    private static CurrentGrid getUnchangeableGrid(int width, int height) {
-        if(width < 6)
-            width = 6;
-        if(height < 5)
-            height = 5;
-        CurrentGrid currentGrid = new CurrentGrid(width, height);
-        int widthHalf = width/2;
-        int heightHalf = height/2-1;
-        currentGrid.incrementCellValue(heightHalf, widthHalf);
-        currentGrid.incrementCellValue(heightHalf, widthHalf+1);
-        currentGrid.incrementCellValue(heightHalf+1, widthHalf-1);
-        currentGrid.incrementCellValue(heightHalf+1, widthHalf+2);
-        currentGrid.incrementCellValue(heightHalf+2, widthHalf);
-        currentGrid.incrementCellValue(heightHalf+2, widthHalf+1);
+    private static CurrentGrid getHomogeneousGrid(int width, int height, int scale, int embryosNumber) {
+        if (width < embryosNumber)
+            width = embryosNumber;
+        if (height < embryosNumber)
+            height = embryosNumber;
+        CurrentGrid currentGrid = new CurrentGrid(width, height, scale);
+        int widthDelta = width / (embryosNumber + 1);
+        int heightDelta = height / (embryosNumber + 1);
+        for (int i = 1; i <= embryosNumber; i++) {
+            for (int j = 1; j <= embryosNumber; j++) {
+                currentGrid.incrementCellValue(heightDelta * i, widthDelta * j);
+            }
+        }
         return currentGrid;
     }
 
-    private static CurrentGrid getGliderGrid(int width, int height){
-        if(width < 5)
-            width = 5;
-        if(height < 5)
-            height = 5;
-        CurrentGrid currentGrid = new CurrentGrid(width, height);
-        int widthHalf = width/2;
-        int heightHalf = height/2-1;
-        currentGrid.incrementCellValue(heightHalf, widthHalf+1);
-        currentGrid.incrementCellValue(heightHalf, widthHalf+2);
-        currentGrid.incrementCellValue(heightHalf+1, widthHalf);
-        currentGrid.incrementCellValue(heightHalf+1, widthHalf+1);
-        currentGrid.incrementCellValue(heightHalf+2, widthHalf+2);
-        return currentGrid;
-    }
-
-    private static CurrentGrid getOscilatorGrid(int width, int height) {
-        if(width < 3)
-            width = 3;
-        if(height < 5)
-            height = 5;
-        CurrentGrid currentGrid = new CurrentGrid(width, height);
-        int widthHalf = width/2;
-        int heightHalf = height/2-1;
-        currentGrid.incrementCellValue(heightHalf, widthHalf+1);
-        currentGrid.incrementCellValue(heightHalf+1, widthHalf+1);
-        currentGrid.incrementCellValue(heightHalf+2, widthHalf+1);
-        return currentGrid;
-    }
-
-    private static CurrentGrid getRandomGrid(int width, int height) {
-        CurrentGrid currentGrid = new CurrentGrid(width, height);
+    private static CurrentGrid getRandomGrid(int width, int height, int scale, int embryosNumber) {
+        CurrentGrid currentGrid = new CurrentGrid(width, height, scale);
         Random random = new Random();
-        int numOfRandoms = width*height / 3;
+        int numOfRandoms = embryosNumber * 2;
         double[] randomDoubles = random.doubles(numOfRandoms).toArray();
         for (int i = 0; i < randomDoubles.length - 1; i+=2) {
             int x = (int) (randomDoubles[i]*height);

@@ -4,16 +4,16 @@ import sample.grid.BoundaryCondition;
 import sample.grid.CurrentGrid;
 import sample.neighbourhood.Neighbourhood;
 
-public class LifeSimulation {
+public class GrowthSimulation {
     private Neighbourhood neighbourhood;
     private BoundaryCondition boundaryCondition;
 
-    public LifeSimulation(Neighbourhood neighbourhood, BoundaryCondition boundaryCondition) {
+    public GrowthSimulation(Neighbourhood neighbourhood, BoundaryCondition boundaryCondition) {
         this.neighbourhood = neighbourhood;
         this.boundaryCondition = boundaryCondition;
     }
 
-    public void generateNextGeneration(CurrentGrid currentGrid) {
+    public void generateNextStep(CurrentGrid currentGrid) {
         int[][] oldGrid = currentGrid.getGrid();
         int[][] grid = new int[currentGrid.getHeight()][currentGrid.getWidth()];
 
