@@ -16,10 +16,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
-import sample.grid.BoundaryCondition;
-import sample.grid.CurrentGrid;
-import sample.grid.EmbryoTemplates;
-import sample.grid.Neighbourhoods;
+import sample.grid.*;
 import sample.simulation.CellPainter;
 import sample.simulation.GrowthSimulation;
 
@@ -27,7 +24,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 
+import static java.lang.Math.max;
 import static sample.grid.BoundaryCondition.getBoundaryConditionForName;
+import static sample.grid.HexagonalNeighbourhoodKind.getNeighbourhoodKindForName;
 import static sample.grid.Neighbourhoods.getNeighbourhoodForName;
 
 public class Controller implements Initializable {
@@ -35,6 +34,7 @@ public class Controller implements Initializable {
     private static int CANVAS_HEIGHT;
     private static int CANVAS_WIDTH;
     private static int SCALE;
+    private static String EMBRYO_MODE;
 
     @FXML
     private Canvas canvas;
@@ -45,11 +45,15 @@ public class Controller implements Initializable {
     @FXML
     private Button resizeButton;
     @FXML
+    private Button resetButton;
+    @FXML
     private Button embryosGeneratorButton;
     @FXML
     private TextField widthTextField;
     @FXML
     private TextField heightTextField;
+    @FXML
+    private Label scaleLabel;
     @FXML
     private TextField embryosNumberTextField;
     @FXML
@@ -58,6 +62,12 @@ public class Controller implements Initializable {
     private TextField rayTextField;
     @FXML
     private Label rayLabel;
+    @FXML
+    private TextField neighbourhoodRayTextField;
+    @FXML
+    private Label neighbourhoodRayLabel;
+    @FXML
+    private ChoiceBox hexagonalKindChoiceBox;
     @FXML
     private ChoiceBox embryoCreationChoiceBox;
     @FXML
@@ -76,11 +86,19 @@ public class Controller implements Initializable {
         CANVAS_HEIGHT = (int) canvas.getHeight();
         CANVAS_WIDTH = (int) canvas.getWidth();
         SCALE = 10;
+        EMBRYO_MODE = "komp. własna";
         gc = canvas.getGraphicsContext2D();
         currentGrid = new CurrentGrid(CANVAS_WIDTH, CANVAS_HEIGHT, SCALE, 0);
         painter = new CellPainter(gc, SCALE);
         clearCanvas();
-        //drawGridLines(CANVAS_WIDTH, CANVAS_HEIGHT);
+        widthTextField.setText(currentGrid.getWidth() + "");
+        heightTextField.setText(currentGrid.getHeight() + "");
+        embryosGeneratorButton.setVisible(false);
+        rayLabel.setVisible(false);
+        rayTextField.setVisible(false);
+        neighbourhoodRayTextField.setVisible(false);
+        neighbourhoodRayLabel.setVisible(false);
+        hexagonalKindChoiceBox.setVisible(false);
 
         setButtons();
         prepareChoiceBoxes();
@@ -98,19 +116,27 @@ public class Controller implements Initializable {
             timeline.stop();
             String neighbourhood = (String) neighbourhoodChoiceBox.getValue();
             String boundaryCondition = (String) boundaryConditionChoiceBox.getValue();
-            growthSimulation = new GrowthSimulation(getNeighbourhoodForName(neighbourhood), getBoundaryConditionForName(boundaryCondition));
-            setNumberOfIterations();
+            String hexagonalKind = (String) hexagonalKindChoiceBox.getValue();
+            growthSimulation = new GrowthSimulation(getNeighbourhoodForName(neighbourhood),
+                    getBoundaryConditionForName(boundaryCondition),
+                    getNeighbourhoodKindForName(hexagonalKind));
+            setTimeline();
             timeline.play();
-            canvas.setOnMouseClicked(event1 -> {
-            });
+            deactivateCanvas();
         });
         stopButton.setOnAction(event -> {
             timeline.stop();
             timeline.getKeyFrames().clear();
-            if (CUSTOM_MODE_ON.apply((String) embryoCreationChoiceBox.getValue()))
+            if (CUSTOM_MODE_ON.apply(EMBRYO_MODE))
                 activateCanvas();
         });
-        resizeButton.setOnAction(event -> resizeGrid());
+        resizeButton.setOnAction(event -> {
+            resizeGrid();
+        });
+        resetButton.setOnAction(event -> {
+            clearCanvas();
+            currentGrid.resetGrid();
+        });
         embryosGeneratorButton.setOnAction(event -> {
             String template = (String) embryoCreationChoiceBox.getValue();
             int embryosNumber = getValueIfNumericAndNotEmpty(embryosNumberTextField.getText());
@@ -124,15 +150,15 @@ public class Controller implements Initializable {
         });
     }
 
-    private void setNumberOfIterations() {
-        Duration delayBetweenMessages = Duration.millis(500);
-        Duration frame = delayBetweenMessages;
+    private void setTimeline() {
+        Duration delayBetweenIterations = Duration.millis(500);
+        Duration frame = delayBetweenIterations;
         timeline.setCycleCount(Timeline.INDEFINITE);
         int iterations=1;
         for (int i = 0; i < iterations; i++) {
             timeline.getKeyFrames().add(new KeyFrame(frame, e -> growthSimulation.generateNextStep(currentGrid)));
             timeline.getKeyFrames().add(new KeyFrame(frame, e -> painter.paintCurrentGridCells(currentGrid)));
-            frame = frame.add(delayBetweenMessages);
+            frame = frame.add(delayBetweenIterations);
         }
     }
 
@@ -140,6 +166,7 @@ public class Controller implements Initializable {
         prepareEmbryoChoiceBox();
         prepareNeighbourhoodsChoiceBox();
         prepareBoundaryConditionChoiceBox();
+        prepareHexagonalKindChoiceBox();
     }
 
     private void prepareEmbryoChoiceBox() {
@@ -148,6 +175,18 @@ public class Controller implements Initializable {
         embryoCreationChoiceBox.setValue(embryoTemplates.get(0));
         embryoCreationChoiceBox.setOnAction(event -> {
             String template = (String) embryoCreationChoiceBox.getValue();
+            EMBRYO_MODE = template;
+            boolean customModeOff = !CUSTOM_MODE_ON.apply(EMBRYO_MODE);
+            embryosNumberTextField.setVisible(customModeOff);
+            embryosGeneratorButton.setVisible(customModeOff);
+            if (customModeOff)
+                deactivateCanvas();
+            else
+                activateCanvas();
+            boolean rayEmbryoTemplate = "z promieniem".equals(EMBRYO_MODE);
+            rayLabel.setVisible(rayEmbryoTemplate);
+            rayTextField.setVisible(rayEmbryoTemplate);
+
             String labelText = EmbryoTemplates.getPromptTextForTemplate(template);
             embryosNumberLabel.setText(labelText);
             embryosNumberLabel.setTextAlignment(TextAlignment.CENTER);
@@ -158,12 +197,31 @@ public class Controller implements Initializable {
         ObservableList neighbourhoods = FXCollections.observableArrayList(Neighbourhoods.getNeighbourhoods());
         neighbourhoodChoiceBox.setItems(neighbourhoods);
         neighbourhoodChoiceBox.setValue(neighbourhoods.get(0));
+        neighbourhoodChoiceBox.setOnAction(event -> {
+            String neighbourhood = (String) neighbourhoodChoiceBox.getValue();
+            boolean rayNeighbourhoodChosen = "Z promieniem".equals(neighbourhood);
+
+            neighbourhoodRayTextField.setVisible(rayNeighbourhoodChosen);
+            boolean hexagonalNeighbourhoodChosen = "Heksagonalne".equals(neighbourhood);
+            hexagonalKindChoiceBox.setVisible(hexagonalNeighbourhoodChosen);
+            if (hexagonalNeighbourhoodChosen)
+                neighbourhoodRayLabel.setText("Rodzaj");
+            else
+                neighbourhoodRayLabel.setText("Promień");
+            neighbourhoodRayLabel.setVisible(rayNeighbourhoodChosen || hexagonalNeighbourhoodChosen);
+        });
     }
 
     private void prepareBoundaryConditionChoiceBox() {
         ObservableList boundaryConditions = FXCollections.observableArrayList(BoundaryCondition.getNames());
         boundaryConditionChoiceBox.setItems(boundaryConditions);
         boundaryConditionChoiceBox.setValue(boundaryConditions.get(0));
+    }
+
+    private void prepareHexagonalKindChoiceBox() {
+        ObservableList neighbourhoodKinds = FXCollections.observableArrayList(HexagonalNeighbourhoodKind.getNames());
+        hexagonalKindChoiceBox.setItems(neighbourhoodKinds);
+        hexagonalKindChoiceBox.setValue(neighbourhoodKinds.get(0));
     }
 
     private void activateCanvas() {
@@ -176,22 +234,24 @@ public class Controller implements Initializable {
         });
     }
 
+    private void deactivateCanvas() {
+        canvas.setOnMouseClicked(event -> {
+        });
+    }
+
     private void resizeGrid() {
         int width = getWidth();
         int height = getHeight();
-        if (currentGrid.getWidth() != width / SCALE || currentGrid.getHeight() != height / SCALE)
-            currentGrid.resizeGrid(width / SCALE, height / SCALE);
-        gc.setFill(Color.WHITE);
-        if (width < CANVAS_WIDTH)
-            gc.fillRect((width - width%SCALE), 0,
-                    CANVAS_WIDTH + (width + width%SCALE),
-                    CANVAS_HEIGHT);
-        if (height < CANVAS_HEIGHT)
-            gc.fillRect(0, (height - height%SCALE),
-                    CANVAS_WIDTH,
-                    CANVAS_HEIGHT + (height + height%SCALE));
-        widthTextField.setText(width - width%SCALE + "");
-        heightTextField.setText(height - height%SCALE + "");
+        int widthScale = CANVAS_WIDTH / width;
+        int heightScale = CANVAS_HEIGHT / height;
+        SCALE = max(widthScale, heightScale);
+        if (SCALE > 20)
+            SCALE = 20;
+        currentGrid.resizeGrid(width, height, SCALE);
+        clearCanvas();
+        painter.paintCurrentGridCells(currentGrid);
+        scaleLabel.setText(SCALE + "");
+        painter.setScale(SCALE);
     }
 
     private void clearCanvas() {
@@ -202,27 +262,21 @@ public class Controller implements Initializable {
     }
 
     private Integer getHeight() {
-        String input = heightTextField.getText();
-        if (!input.isEmpty() && isNumeric(input)) {
-            int height = Integer.parseInt(input);
-            if (height <= 0)
-                return 1;
-            if (height <= CANVAS_HEIGHT)
-                return height;
-        }
-        return CANVAS_HEIGHT;
+        int height = getValueIfNumericAndNotEmpty(heightTextField.getText());
+        if (height <= 0)
+            return 1;
+        else if (height > CANVAS_HEIGHT)
+            return CANVAS_HEIGHT;
+        return height;
     }
 
     private int getWidth() {
-        String input = widthTextField.getText();
-        if (!input.isEmpty() && isNumeric(input)) {
-            int width = Integer.parseInt(input);
-            if (width <= 0)
+        int width = getValueIfNumericAndNotEmpty(widthTextField.getText());
+        if (width <= 0)
                 return 1;
-            if (width <= CANVAS_WIDTH)
-                return width;
-        }
-        return CANVAS_WIDTH;
+        else if (width > CANVAS_WIDTH)
+            return CANVAS_WIDTH;
+        return width;
     }
 
     private boolean isNumeric(String value) {

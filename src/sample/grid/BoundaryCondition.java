@@ -33,11 +33,6 @@ public enum BoundaryCondition {
         } else {
             return x - 1;
         }
-        /*if (ABSORBING.equals(boundaryCondition)) {
-            return x == 0 ? -1 : x-1;
-        } else {
-            return x == 0 ? width-1 : x-1;
-        }*/
     }
 
     public int getRightIndex(int width, int x) {
@@ -46,11 +41,6 @@ public enum BoundaryCondition {
         } else {
             return x + 1;
         }
-/*        if (ABSORBING.equals(boundaryCondition)) {
-            return x == width-1 ? -1 : x+1;
-        } else {
-            return x == width-1 ? 0 : x-1;
-        }*/
     }
 
     public int getUpperIndex(int height, int y) {

@@ -12,7 +12,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("view/sample.fxml"));
         primaryStage.setTitle("Rozrost ziaren");
-        primaryStage.setScene(new Scene(root, 750, 585));
+        primaryStage.setScene(new Scene(root, 775, 690));
         primaryStage.setResizable(false);
         primaryStage.show();
     }

@@ -1,14 +1,12 @@
 package sample.grid;
 
-import sample.neighbourhood.MooreNeighbourhood;
-import sample.neighbourhood.Neighbourhood;
-import sample.neighbourhood.VonNeumannNeighbourhood;
+import sample.neighbourhood.*;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class Neighbourhoods {
-    private final static List<String> NEIGHBOURHOODS = Arrays.asList("Von Neumanna", "Moore'a", "Heksagonalne", "Oktagonalne");
+    private final static List<String> NEIGHBOURHOODS = Arrays.asList("Von Neumanna", "Moore'a", "Pentagonalne losowe", "Heksagonalne", "Z promieniem");
 
     public static List<String> getNeighbourhoods() {
         return NEIGHBOURHOODS;
@@ -20,10 +18,10 @@ public class Neighbourhoods {
                 return new VonNeumannNeighbourhood();
             case "Moore'a":
                 return new MooreNeighbourhood();
+            case "Pentagonalne losowe":
+                return new PentagonalRandomNeighbourhood();
             case "Heksagonalne":
-                return null;
-            case "Oktagonalne":
-                return null;
+                return new HexagonalNeighbourhood();
             default:
                 return null;
         }

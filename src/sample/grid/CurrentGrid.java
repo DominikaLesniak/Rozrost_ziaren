@@ -46,7 +46,7 @@ public class CurrentGrid {
         grid[i][j] = newValue;
     }
 
-    public void resizeGrid(int newWidth, int newHeight) {
+    public void resizeGrid(int newWidth, int newHeight, int scale) {
         int[][] newGrid = initiateGrid(newHeight, newWidth);
 
         int widthBorder = Math.min(newWidth, width);
@@ -59,7 +59,12 @@ public class CurrentGrid {
         }
         this.height = newHeight;
         this.width = newWidth;
+        this.scale = scale;
         this.grid = newGrid;
+    }
+
+    public void resetGrid() {
+        this.grid = initiateGrid(height, width);
     }
 
     private Color generateNewColor() {

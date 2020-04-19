@@ -39,11 +39,11 @@ public class EmbryoTemplates {
         if (height < embryosNumber)
             height = embryosNumber;
         CurrentGrid currentGrid = new CurrentGrid(width, height, scale);
-        int widthDelta = width / (embryosNumber + 1);
-        int heightDelta = height / (embryosNumber + 1);
+        double widthDelta = (double) width / (double) (embryosNumber + 1);
+        double heightDelta = (double) height / (double) (embryosNumber + 1);
         for (int i = 1; i <= embryosNumber; i++) {
             for (int j = 1; j <= embryosNumber; j++) {
-                currentGrid.incrementCellValue(heightDelta * i, widthDelta * j);
+                currentGrid.incrementCellValue((int) (heightDelta * i), (int) (widthDelta * j));
             }
         }
         return currentGrid;
