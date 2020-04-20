@@ -19,12 +19,12 @@ public class CellPainter {
         int jResidue = j % scale;
         int iStartPixel = i - iResidue;
         int jStartPixel = j - jResidue;
-        int y = iStartPixel / currentGrid.getScale();
-        int x = jStartPixel / currentGrid.getScale();
-        if (x >= currentGrid.getGrid().length || y >= currentGrid.getGrid()[0].length)
+        int x = iStartPixel / currentGrid.getScale();
+        int y = jStartPixel / currentGrid.getScale();
+        if (y >= currentGrid.getGrid().length || x >= currentGrid.getGrid()[0].length)
             return;
-        currentGrid.incrementCellValue(x, y);
-        int value = currentGrid.getCell(x, y);
+        currentGrid.incrementCellValue(y, x);
+        int value = currentGrid.getCell(y, x);
         paintCell(iStartPixel, jStartPixel, value, currentGrid);
     }
 
@@ -56,17 +56,6 @@ public class CellPainter {
     private void paintCircle(CellCoordinates cell, int ray) {
         gc.setFill(Color.BLACK);
         gc.strokeOval(cell.getHeight() - ray, cell.getWidth() - ray, 2 * ray, 2 * ray);
-    }
-
-    private Color getColorForValue(int value) {
-        if(value == 1)
-            return Color.BLACK;
-        else
-            return Color.WHITE;
-    }
-    
-    public void setGc(GraphicsContext gc) {
-        this.gc = gc;
     }
 
     public void setScale(int scale) {

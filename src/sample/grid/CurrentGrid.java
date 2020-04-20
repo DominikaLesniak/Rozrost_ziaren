@@ -117,10 +117,6 @@ public class CurrentGrid {
         return grid[height][width];
     }
 
-    public void setScale(int scale) {
-        this.scale = scale;
-    }
-
     public void setGrid(int[][] grid) {
         this.grid = grid;
     }

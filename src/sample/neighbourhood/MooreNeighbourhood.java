@@ -16,30 +16,15 @@ public class MooreNeighbourhood extends Neighbourhood {
         int lowerIndex = boundaryCondition.getLowerIndex(grid.getHeight(), y);
 
         Map<Integer, Integer> neighbours = new HashMap<>();
-        if (INDEX_CHECK.apply(upperIndex)) {
-            addToMap(neighbours, grid.getCell(upperIndex, x));
-            if (INDEX_CHECK.apply(leftIndex)) {
-                addToMap(neighbours, grid.getCell(upperIndex, leftIndex));
-            }
-            if (INDEX_CHECK.apply(rightIndex)) {
-                addToMap(neighbours, grid.getCell(upperIndex, rightIndex));
-            }
-        }
-        if (INDEX_CHECK.apply(leftIndex)) {
-            addToMap(neighbours, grid.getCell(y, leftIndex));
-        }
-        if (INDEX_CHECK.apply(rightIndex)) {
-            addToMap(neighbours, grid.getCell(y, rightIndex));
-        }
-        if (INDEX_CHECK.apply(lowerIndex)) {
-            addToMap(neighbours, grid.getCell(lowerIndex, x));
-            if (INDEX_CHECK.apply(leftIndex)) {
-                addToMap(neighbours, grid.getCell(lowerIndex, leftIndex));
-            }
-            if (INDEX_CHECK.apply(rightIndex)) {
-                addToMap(neighbours, grid.getCell(lowerIndex, rightIndex));
-            }
-        }
+        addToMap(neighbours, grid.getCell(upperIndex, x));
+        addToMap(neighbours, grid.getCell(upperIndex, leftIndex));
+        addToMap(neighbours, grid.getCell(upperIndex, rightIndex));
+        addToMap(neighbours, grid.getCell(y, leftIndex));
+        addToMap(neighbours, grid.getCell(y, rightIndex));
+        addToMap(neighbours, grid.getCell(lowerIndex, x));
+        addToMap(neighbours, grid.getCell(lowerIndex, leftIndex));
+        addToMap(neighbours, grid.getCell(lowerIndex, rightIndex));
+
         return neighbours.entrySet().stream()
                 .sorted(Comparator.comparingDouble(Map.Entry::getValue))
                 .map(Map.Entry::getKey)

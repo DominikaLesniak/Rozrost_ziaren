@@ -21,7 +21,6 @@ public class GrowthSimulation {
     }
 
     public void generateNextStep(CurrentGrid currentGrid) {
-        int[][] oldGrid = currentGrid.getGrid();
         int[][] grid = new int[currentGrid.getHeight()][currentGrid.getWidth()];
         if (neighbourhood instanceof PentagonalRandomNeighbourhood) {
             Random random = new Random();
@@ -47,13 +46,5 @@ public class GrowthSimulation {
             }
         }
         currentGrid.setGrid(grid);
-    }
-
-    public void setNeighbourhood(Neighbourhood neighbourhood) {
-        this.neighbourhood = neighbourhood;
-    }
-
-    public void setBoundaryCondition(BoundaryCondition boundaryCondition) {
-        this.boundaryCondition = boundaryCondition;
     }
 }

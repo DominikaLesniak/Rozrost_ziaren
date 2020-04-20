@@ -43,41 +43,21 @@ public class PentagonalRandomNeighbourhood extends Neighbourhood {
 
     private Map<Integer, Integer> verticalCase(CurrentGrid grid, int x, int y, int leftIndex, int rightIndex, int verticalIndex) {
         Map<Integer, Integer> neighbours = new HashMap<>();
-        if (INDEX_CHECK.apply(verticalIndex)) {
-            addToMap(neighbours, grid.getCell(verticalIndex, x));
-            if (INDEX_CHECK.apply(leftIndex)) {
-                addToMap(neighbours, grid.getCell(verticalIndex, leftIndex));
-            }
-            if (INDEX_CHECK.apply(rightIndex)) {
-                addToMap(neighbours, grid.getCell(verticalIndex, rightIndex));
-            }
-        }
-        if (INDEX_CHECK.apply(leftIndex)) {
-            addToMap(neighbours, grid.getCell(y, leftIndex));
-        }
-        if (INDEX_CHECK.apply(rightIndex)) {
-            addToMap(neighbours, grid.getCell(y, rightIndex));
-        }
+        addToMap(neighbours, grid.getCell(verticalIndex, x));
+        addToMap(neighbours, grid.getCell(verticalIndex, leftIndex));
+        addToMap(neighbours, grid.getCell(verticalIndex, rightIndex));
+        addToMap(neighbours, grid.getCell(y, leftIndex));
+        addToMap(neighbours, grid.getCell(y, rightIndex));
         return neighbours;
     }
 
     private Map<Integer, Integer> horizontalCase(CurrentGrid grid, int x, int y, int upperIndex, int lowerIndex, int horizontalIndex) {
         Map<Integer, Integer> neighbours = new HashMap<>();
-        if (INDEX_CHECK.apply(upperIndex)) {
-            addToMap(neighbours, grid.getCell(upperIndex, x));
-            if (INDEX_CHECK.apply(horizontalIndex)) {
-                addToMap(neighbours, grid.getCell(upperIndex, horizontalIndex));
-            }
-        }
-        if (INDEX_CHECK.apply(horizontalIndex)) {
-            addToMap(neighbours, grid.getCell(y, horizontalIndex));
-        }
-        if (INDEX_CHECK.apply(lowerIndex)) {
-            addToMap(neighbours, grid.getCell(lowerIndex, x));
-            if (INDEX_CHECK.apply(horizontalIndex)) {
-                addToMap(neighbours, grid.getCell(lowerIndex, horizontalIndex));
-            }
-        }
+        addToMap(neighbours, grid.getCell(upperIndex, x));
+        addToMap(neighbours, grid.getCell(upperIndex, horizontalIndex));
+        addToMap(neighbours, grid.getCell(y, horizontalIndex));
+        addToMap(neighbours, grid.getCell(lowerIndex, x));
+        addToMap(neighbours, grid.getCell(lowerIndex, horizontalIndex));
         return neighbours;
     }
 }

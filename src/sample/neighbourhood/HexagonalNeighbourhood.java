@@ -22,10 +22,10 @@ public class HexagonalNeighbourhood extends Neighbourhood {
         Map<Integer, Integer> neighbours;
         switch (generationCase) {
             case LEFT_CASE:
-                neighbours = verticalCase(grid, x, y, rightIndex, leftIndex, upperIndex, lowerIndex);
+                neighbours = singleCase(grid, x, y, rightIndex, leftIndex, upperIndex, lowerIndex);
                 break;
             case RIGHT_CASE:
-                neighbours = verticalCase(grid, x, y, leftIndex, rightIndex, upperIndex, lowerIndex);
+                neighbours = singleCase(grid, x, y, leftIndex, rightIndex, upperIndex, lowerIndex);
                 break;
             default:
                 neighbours = Collections.emptyMap();
@@ -38,26 +38,14 @@ public class HexagonalNeighbourhood extends Neighbourhood {
                 .orElse(0);
     }
 
-    private Map<Integer, Integer> verticalCase(CurrentGrid grid, int x, int y, int side1Index, int side2Index, int upperIndex, int lowerIndex) {
+    private Map<Integer, Integer> singleCase(CurrentGrid grid, int x, int y, int side1Index, int side2Index, int upperIndex, int lowerIndex) {
         Map<Integer, Integer> neighbours = new HashMap<>();
-        if (INDEX_CHECK.apply(upperIndex)) {
-            addToMap(neighbours, grid.getCell(upperIndex, x));
-            if (INDEX_CHECK.apply(side1Index)) {
-                addToMap(neighbours, grid.getCell(upperIndex, side1Index));
-            }
-        }
-        if (INDEX_CHECK.apply(side1Index)) {
-            addToMap(neighbours, grid.getCell(y, side1Index));
-        }
-        if (INDEX_CHECK.apply(side2Index)) {
-            addToMap(neighbours, grid.getCell(y, side2Index));
-        }
-        if (INDEX_CHECK.apply(lowerIndex)) {
-            addToMap(neighbours, grid.getCell(lowerIndex, x));
-            if (INDEX_CHECK.apply(side2Index)) {
-                addToMap(neighbours, grid.getCell(lowerIndex, side2Index));
-            }
-        }
+        addToMap(neighbours, grid.getCell(upperIndex, x));
+        addToMap(neighbours, grid.getCell(upperIndex, side1Index));
+        addToMap(neighbours, grid.getCell(y, side1Index));
+        addToMap(neighbours, grid.getCell(y, side2Index));
+        addToMap(neighbours, grid.getCell(lowerIndex, x));
+        addToMap(neighbours, grid.getCell(lowerIndex, side2Index));
         return neighbours;
     }
 }

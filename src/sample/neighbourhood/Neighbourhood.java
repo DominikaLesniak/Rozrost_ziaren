@@ -4,10 +4,8 @@ import sample.grid.CurrentGrid;
 import sample.options.BoundaryCondition;
 
 import java.util.Map;
-import java.util.function.Function;
 
 public abstract class Neighbourhood {
-    final Function<Integer, Boolean> INDEX_CHECK = x -> x >= 0;
     int generationCase;
 
     public abstract Integer findBestNeighbour(CurrentGrid grid, int x, int y, BoundaryCondition boundaryCondition);
