@@ -183,11 +183,11 @@ public class Controller implements Initializable {
                 deactivateCanvas();
             else
                 activateCanvas();
-            boolean rayEmbryoTemplate = "z promieniem".equals(EMBRYO_MODE);
+            boolean rayEmbryoTemplate = "losowe z promieniem".equals(EMBRYO_MODE);
             rayLabel.setVisible(rayEmbryoTemplate);
             rayTextField.setVisible(rayEmbryoTemplate);
 
-            String labelText = EmbryoTemplates.getPromptTextForTemplate(template);
+            String labelText = EmbryoTemplates.getLabelTextForTemplate(template);
             embryosNumberLabel.setText(labelText);
             embryosNumberLabel.setTextAlignment(TextAlignment.CENTER);
         });

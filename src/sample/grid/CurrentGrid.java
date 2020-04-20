@@ -118,6 +118,10 @@ public class CurrentGrid {
         this.grid = grid;
     }
 
+    public int getEmbryosNumber() {
+        return embryosNumber;
+    }
+
     public void print() {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {

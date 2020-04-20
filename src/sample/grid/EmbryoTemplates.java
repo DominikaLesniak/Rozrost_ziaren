@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 public class EmbryoTemplates {
-    private final static List<String> TEMPLATES = Arrays.asList("komp. własna", "jednorodne", "losowe", "z promieniem");
+    private final static List<String> TEMPLATES = Arrays.asList("komp. własna", "jednorodne", "losowe", "losowe z promieniem");
 
     public static List<String> getTemplates() {
         return TEMPLATES;
@@ -19,14 +19,14 @@ public class EmbryoTemplates {
                 return getHomogeneousGrid(width, height, scale, embryosNumber);
             case "losowe":
                 return getRandomGrid(width, height, scale, embryosNumber);
-            case "z promieniem":
-                return null;
+            case "losowe z promieniem":
+                return getRayGrid(width, height, scale, embryosNumber, ray);
             default:
                 throw new Exception("Nieznany wzorzec");
         }
     }
 
-    public static String getPromptTextForTemplate(String template) {
+    public static String getLabelTextForTemplate(String template) {
         if ("jednorodne".equals(template)) {
             return "Ilość w rzędzie/kolumnie";
         }
@@ -58,6 +58,41 @@ public class EmbryoTemplates {
             int x = (int) (randomDoubles[i]*height);
             int y = (int) (randomDoubles[i+1] * width);
             currentGrid.incrementCellValue(x, y);
+        }
+        return currentGrid;
+    }
+
+    private static CurrentGrid getRayGrid(int width, int height, int scale, int embryosNumber, int ray) {
+        CurrentGrid currentGrid = new CurrentGrid(width, height, scale);
+        Random random = new Random();
+        int rangeOfCells = ray / scale;
+        if (ray % scale > scale / 2)
+            rangeOfCells++;
+        int failedTrials = 0;
+
+        while (currentGrid.getEmbryosNumber() < embryosNumber && failedTrials < 100) {
+            int x = (int) (random.nextDouble() * width);
+            int y = (int) (random.nextDouble() * height);
+            boolean spaceAvailableForEmbryo = true;
+            for (int j = -rangeOfCells; j <= rangeOfCells; j++) {
+                for (int k = -rangeOfCells; k <= rangeOfCells; k++) {
+                    int heighIndex = y + j;
+                    int widthIndex = x + k;
+                    if (heighIndex < 0 || widthIndex < 0 || heighIndex > height - 1 || widthIndex > width - 1)
+                        continue;
+                    if (currentGrid.getCell(heighIndex, widthIndex) != 0) {
+                        spaceAvailableForEmbryo = false;
+                        break;
+                    }
+                }
+                if (!spaceAvailableForEmbryo)
+                    break;
+            }
+            if (spaceAvailableForEmbryo) {
+                currentGrid.incrementCellValue(y, x);
+                failedTrials = 0;
+            } else
+                failedTrials++;
         }
         return currentGrid;
     }
