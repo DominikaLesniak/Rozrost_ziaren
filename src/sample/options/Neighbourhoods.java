@@ -12,7 +12,7 @@ public class Neighbourhoods {
         return NEIGHBOURHOODS;
     }
 
-    public static Neighbourhood getNeighbourhoodForName(String name) {
+    public static Neighbourhood getNeighbourhoodForName(String name, int ray) {
         switch (name) {
             case "Von Neumanna":
                 return new VonNeumannNeighbourhood();
@@ -23,7 +23,7 @@ public class Neighbourhoods {
             case "Heksagonalne":
                 return new HexagonalNeighbourhood();
             default:
-                return null;
+                return new RayNeighbourhood(ray);
         }
     }
 }

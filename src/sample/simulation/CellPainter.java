@@ -2,6 +2,7 @@ package sample.simulation;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import sample.grid.CellCoordinates;
 import sample.grid.CurrentGrid;
 
 public class CellPainter {
@@ -36,6 +37,7 @@ public class CellPainter {
                 paintCell(jStartPixel, iStartPixel, value, currentGrid);
             }
         }
+        //paintCircles(currentGrid, 50);
     }
 
     private void paintCell(int i, int j, int value, CurrentGrid currentGrid) {
@@ -43,6 +45,17 @@ public class CellPainter {
         gc.setFill(color);
         gc.fillRect(i, j,
                 currentGrid.getScale(), currentGrid.getScale());
+    }
+
+    public void paintCircles(CurrentGrid currentGrid, int ray) {
+        currentGrid.cells.stream()
+                .map(cellCoordinates -> currentGrid.getCellCenter(cellCoordinates.getHeight(), cellCoordinates.getWidth()))
+                .forEach(cell -> paintCircle(cell, ray));
+    }
+
+    private void paintCircle(CellCoordinates cell, int ray) {
+        gc.setFill(Color.BLACK);
+        gc.strokeOval(cell.getHeight() - ray, cell.getWidth() - ray, 2 * ray, 2 * ray);
     }
 
     private Color getColorForValue(int value) {

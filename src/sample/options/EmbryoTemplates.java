@@ -1,5 +1,6 @@
 package sample.options;
 
+import sample.grid.CellCoordinates;
 import sample.grid.CurrentGrid;
 
 import java.util.Arrays;
@@ -60,6 +61,7 @@ public class EmbryoTemplates {
             int x = (int) (randomDoubles[i]*height);
             int y = (int) (randomDoubles[i+1] * width);
             currentGrid.incrementCellValue(x, y);
+            currentGrid.cells.add(new CellCoordinates(x, y));
         }
         return currentGrid;
     }
@@ -92,6 +94,7 @@ public class EmbryoTemplates {
             }
             if (spaceAvailableForEmbryo) {
                 currentGrid.incrementCellValue(y, x);
+                currentGrid.cells.add(new CellCoordinates(x, y));
                 failedTrials = 0;
             } else
                 failedTrials++;

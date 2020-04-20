@@ -2,9 +2,7 @@ package sample.grid;
 
 import javafx.scene.paint.Color;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class CurrentGrid {
     private int width;
@@ -13,6 +11,7 @@ public class CurrentGrid {
     private int embryosNumber;
     private Random random;
     private Map<Integer, Color> colorMap;
+    public List<CellCoordinates> cells;
 
     private int[][] grid;
 
@@ -23,6 +22,7 @@ public class CurrentGrid {
         this.embryosNumber = 0;
         this.colorMap = new HashMap<>();
         this.random = new Random();
+        cells = new ArrayList<>();
         colorMap.put(0, Color.WHITE);
         this.grid = initiateGrid(this.height, this.width);
     }
@@ -35,6 +35,7 @@ public class CurrentGrid {
         this.colorMap = new HashMap<>();
         this.random = new Random();
         colorMap.put(0, Color.WHITE);
+        cells = new ArrayList<>();
         this.grid = initiateGrid(this.height, this.width);
     }
 
@@ -111,6 +112,8 @@ public class CurrentGrid {
     }
 
     public int getCell(int height, int width) {
+        if (height < 0 || height > this.height - 1 || width < 0 || width > this.width - 1)
+            return 0;
         return grid[height][width];
     }
 

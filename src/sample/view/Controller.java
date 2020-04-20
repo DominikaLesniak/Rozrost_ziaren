@@ -121,7 +121,10 @@ public class Controller implements Initializable {
             String neighbourhood = (String) neighbourhoodChoiceBox.getValue();
             String boundaryCondition = (String) boundaryConditionChoiceBox.getValue();
             String hexagonalKind = (String) hexagonalKindChoiceBox.getValue();
-            growthSimulation = new GrowthSimulation(getNeighbourhoodForName(neighbourhood),
+            int ray = getValueIfNumericAndNotEmpty(neighbourhoodRayTextField.getText());
+            if (ray > 0)
+                painter.paintCircles(currentGrid, ray);
+            growthSimulation = new GrowthSimulation(getNeighbourhoodForName(neighbourhood, ray),
                     getBoundaryConditionForName(boundaryCondition),
                     getNeighbourhoodKindForName(hexagonalKind));
             setTimeline();
