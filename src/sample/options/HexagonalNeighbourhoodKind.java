@@ -1,4 +1,4 @@
-package sample.grid;
+package sample.options;
 
 import java.util.Arrays;
 import java.util.List;

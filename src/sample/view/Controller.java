@@ -16,7 +16,11 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
-import sample.grid.*;
+import sample.grid.CurrentGrid;
+import sample.options.BoundaryCondition;
+import sample.options.EmbryoTemplates;
+import sample.options.HexagonalNeighbourhoodKind;
+import sample.options.Neighbourhoods;
 import sample.simulation.CellPainter;
 import sample.simulation.GrowthSimulation;
 
@@ -25,9 +29,9 @@ import java.util.ResourceBundle;
 import java.util.function.Function;
 
 import static java.lang.Math.max;
-import static sample.grid.BoundaryCondition.getBoundaryConditionForName;
-import static sample.grid.HexagonalNeighbourhoodKind.getNeighbourhoodKindForName;
-import static sample.grid.Neighbourhoods.getNeighbourhoodForName;
+import static sample.options.BoundaryCondition.getBoundaryConditionForName;
+import static sample.options.HexagonalNeighbourhoodKind.getNeighbourhoodKindForName;
+import static sample.options.Neighbourhoods.getNeighbourhoodForName;
 
 public class Controller implements Initializable {
     private final Function<String, Boolean> CUSTOM_MODE_ON = "komp. własna"::equals;
@@ -250,7 +254,7 @@ public class Controller implements Initializable {
         currentGrid.resizeGrid(width, height, SCALE);
         clearCanvas();
         painter.paintCurrentGridCells(currentGrid);
-        scaleLabel.setText(SCALE + "");
+        scaleLabel.setText(SCALE + " pikseli");
         painter.setScale(SCALE);
     }
 

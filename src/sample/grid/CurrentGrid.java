@@ -4,12 +4,14 @@ import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class CurrentGrid {
     private int width;
     private int height;
     private int scale;
     private int embryosNumber;
+    private Random random;
     private Map<Integer, Color> colorMap;
 
     private int[][] grid;
@@ -20,6 +22,7 @@ public class CurrentGrid {
         this.scale = scale;
         this.embryosNumber = 0;
         this.colorMap = new HashMap<>();
+        this.random = new Random();
         colorMap.put(0, Color.WHITE);
         this.grid = initiateGrid(this.height, this.width);
     }
@@ -30,6 +33,7 @@ public class CurrentGrid {
         this.scale = scale;
         this.embryosNumber = embryosNumber;
         this.colorMap = new HashMap<>();
+        this.random = new Random();
         colorMap.put(0, Color.WHITE);
         this.grid = initiateGrid(this.height, this.width);
     }
@@ -106,8 +110,8 @@ public class CurrentGrid {
         return grid;
     }
 
-    public int getCell(int i, int j) {
-        return grid[i][j];
+    public int getCell(int height, int width) {
+        return grid[height][width];
     }
 
     public void setScale(int scale) {
@@ -120,6 +124,18 @@ public class CurrentGrid {
 
     public int getEmbryosNumber() {
         return embryosNumber;
+    }
+
+    public CellCoordinates getCellCenter(int height, int width) {
+        int centerWidth = (int) (width * scale + 0.5 * scale);
+        int centerHeight = (int) (height * scale + 0.5 * scale);
+        return new CellCoordinates(centerWidth, centerHeight);
+    }
+
+    public CellCoordinates getCellRandomPoint(int height, int width) {
+        int centerWidth = (int) (width * scale + random.nextDouble() * scale);
+        int centerHeight = (int) (height * scale + random.nextDouble() * scale);
+        return new CellCoordinates(centerWidth, centerHeight);
     }
 
     public void print() {

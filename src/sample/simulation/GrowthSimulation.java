@@ -1,11 +1,11 @@
 package sample.simulation;
 
-import sample.grid.BoundaryCondition;
 import sample.grid.CurrentGrid;
-import sample.grid.HexagonalNeighbourhoodKind;
 import sample.neighbourhood.HexagonalNeighbourhood;
 import sample.neighbourhood.Neighbourhood;
 import sample.neighbourhood.PentagonalRandomNeighbourhood;
+import sample.options.BoundaryCondition;
+import sample.options.HexagonalNeighbourhoodKind;
 
 import java.util.Random;
 

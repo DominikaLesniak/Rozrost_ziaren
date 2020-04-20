@@ -1,6 +1,6 @@
 package sample.neighbourhood;
 
-import sample.grid.BoundaryCondition;
+import sample.options.BoundaryCondition;
 
 import java.util.Comparator;
 import java.util.HashMap;

@@ -38,8 +38,9 @@
         <Label fx:id="rayLabel" layoutX="668.0" layoutY="393.0" prefHeight="31.0" prefWidth="56.0" text="Promień"/>
         <Button fx:id="embryosGeneratorButton" layoutX="631.0" layoutY="472.0" mnemonicParsing="false" prefHeight="31.0"
                 prefWidth="128.0" text="Generuj zarodki" textAlignment="CENTER" wrapText="true"/>
-        <Label layoutX="659.0" layoutY="23.0" text="Skala:"/>
-        <Label fx:id="scaleLabel" layoutX="707.0" layoutY="23.0" text="10"/>
+        <Label layoutX="631.0" layoutY="5.0" prefHeight="21.0" prefWidth="124.0" text="Rozmiar komórki:"
+               textAlignment="CENTER" wrapText="true"/>
+        <Label fx:id="scaleLabel" layoutX="668.0" layoutY="26.0" text="10 pikseli"/>
         <Button fx:id="resetButton" layoutX="634.0" layoutY="648.0" mnemonicParsing="false" prefHeight="31.0"
                 prefWidth="128.0" text="Wyczyść siatkę"/>
         <Label fx:id="neighbourhoodRayLabel" layoutX="52.0" layoutY="664.0" text="Promień"/>
