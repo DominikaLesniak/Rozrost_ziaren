@@ -38,10 +38,10 @@ public class GrowthSimulation {
 
         for (int i = 0; i < currentGrid.getHeight(); i++) {
             for (int j = 0; j < currentGrid.getWidth(); j++) {
-                if (oldGrid[i][j] != 0)
-                    grid[i][j] = oldGrid[i][j];
+                if (currentGrid.getCell(i, j) != 0)
+                    grid[i][j] = currentGrid.getCell(i, j);
                 else {
-                    int bestNeighbour = neighbourhood.findBestNeighbour(oldGrid, j, i, boundaryCondition);
+                    int bestNeighbour = neighbourhood.findBestNeighbour(currentGrid, j, i, boundaryCondition);
                     grid[i][j] = bestNeighbour;
                 }
             }

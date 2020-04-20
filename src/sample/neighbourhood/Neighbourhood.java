@@ -1,5 +1,6 @@
 package sample.neighbourhood;
 
+import sample.grid.CurrentGrid;
 import sample.options.BoundaryCondition;
 
 import java.util.Map;
@@ -9,7 +10,7 @@ public abstract class Neighbourhood {
     final Function<Integer, Boolean> INDEX_CHECK = x -> x >= 0;
     int generationCase;
 
-    public abstract Integer findBestNeighbour(int[][] grid, int x, int y, BoundaryCondition boundaryCondition);
+    public abstract Integer findBestNeighbour(CurrentGrid grid, int x, int y, BoundaryCondition boundaryCondition);
 
     void addToMap(Map<Integer, Integer> neighbours, int id) {
         if (id != 0) {
