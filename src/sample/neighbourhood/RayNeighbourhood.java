@@ -7,8 +7,12 @@ import sample.options.BoundaryCondition;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+
+import static sample.options.BoundaryCondition.PERIODICAL;
 
 public class RayNeighbourhood extends Neighbourhood {
+    private final Function<BoundaryCondition, Boolean> IS_PERIODICAL = PERIODICAL::equals;
     private int ray;
 
     public RayNeighbourhood(int ray) {
@@ -25,19 +29,22 @@ public class RayNeighbourhood extends Neighbourhood {
             for (int j = -rangeOfCells; j <= rangeOfCells; j++) {
                 int heighIndex = y + i;
                 int widthIndex = x + j;
-                if (BoundaryCondition.PERIODICAL.equals(boundaryCondition)) {
-                    if (heighIndex < 0)
-                        heighIndex = grid.getHeight() - heighIndex;
-                    else
-                        heighIndex = heighIndex % grid.getHeight();
-                    if (widthIndex < 0)
-                        widthIndex = grid.getWidth() - widthIndex;
-                    else
-                        widthIndex = widthIndex % grid.getWidth();
-                }
+
                 CellCoordinates cellRandomPoint = grid.getCellRandomPoint(heighIndex, widthIndex);
-                if (cellRandomPoint.calculateDistance(cellCenter) <= ray)
+                int distance = cellRandomPoint.calculateDistance(cellCenter);
+                if (IS_PERIODICAL.apply(boundaryCondition)) {
+                    if (heighIndex < 0)
+                        heighIndex = grid.getHeight() + heighIndex;
+                    else
+                        heighIndex = heighIndex % (grid.getHeight() * grid.getScale());
+                    if (widthIndex < 0)
+                        widthIndex = grid.getWidth() + widthIndex;
+                    else
+                        widthIndex = widthIndex % (grid.getWidth() * grid.getScale());
+                }
+                if (distance <= ray) {
                     addToMap(neighbours, grid.getCell(heighIndex, widthIndex));
+                }
             }
         }
         return neighbours.entrySet().stream()

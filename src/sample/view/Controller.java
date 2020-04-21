@@ -122,8 +122,8 @@ public class Controller implements Initializable {
             String boundaryCondition = (String) boundaryConditionChoiceBox.getValue();
             String hexagonalKind = (String) hexagonalKindChoiceBox.getValue();
             int ray = getValueIfNumericAndNotEmpty(neighbourhoodRayTextField.getText());
-            if (ray > 0)
-                painter.paintCircles(currentGrid, ray);
+            /*if (ray > 0)
+                painter.paintCircles(currentGrid, ray);*/
             growthSimulation = new GrowthSimulation(getNeighbourhoodForName(neighbourhood, ray),
                     getBoundaryConditionForName(boundaryCondition),
                     getNeighbourhoodKindForName(hexagonalKind));
