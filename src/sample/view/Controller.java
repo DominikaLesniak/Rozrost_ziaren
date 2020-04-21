@@ -141,6 +141,7 @@ public class Controller implements Initializable {
             resizeGrid();
         });
         resetButton.setOnAction(event -> {
+            timeline.stop();
             clearCanvas();
             currentGrid.resetGrid();
         });
