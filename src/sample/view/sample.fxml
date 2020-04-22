@@ -9,8 +9,10 @@
             fx:controller="sample.view.Controller">
     <children>
         <Canvas fx:id="canvas" height="600.0" layoutX="14.0" layoutY="14.0" width="600.0"/>
-        <TextField fx:id="heightTextField" layoutX="633.0" layoutY="74.0" prefHeight="31.0" prefWidth="128.0"/>
-        <TextField fx:id="widthTextField" layoutX="632.0" layoutY="138.0" prefHeight="31.0" prefWidth="128.0"/>
+        <TextField fx:id="heightTextField" layoutX="633.0" layoutY="74.0" prefHeight="31.0" prefWidth="128.0"
+                   promptText="1-600"/>
+        <TextField fx:id="widthTextField" layoutX="632.0" layoutY="138.0" prefHeight="31.0" prefWidth="128.0"
+                   promptText="1-600"/>
         <Label layoutX="643.0" layoutY="53.0" text="Wysokość siatki"/>
         <Label layoutX="644.0" layoutY="117.0" text="Szerokość siatki"/>
         <Button fx:id="resizeButton" layoutX="636.0" layoutY="179.0" mnemonicParsing="false" text="Zmień wymiary"/>
@@ -34,7 +36,8 @@
         <Label fx:id="embryosNumberLabel" contentDisplay="CENTER" layoutX="632.0" layoutY="308.0" prefHeight="47.0"
                prefWidth="128.0" text="Liczba zarodków" textAlignment="CENTER" wrapText="true"/>
         <TextField fx:id="embryosNumberTextField" layoutX="641.0" layoutY="355.0" prefHeight="31.0" prefWidth="110.0"/>
-        <TextField fx:id="rayTextField" layoutX="641.0" layoutY="424.0" prefHeight="31.0" prefWidth="110.0"/>
+        <TextField fx:id="rayTextField" layoutX="641.0" layoutY="424.0" prefHeight="31.0" prefWidth="110.0"
+                   promptText="(ilość pikseli)"/>
         <Label fx:id="rayLabel" layoutX="668.0" layoutY="393.0" prefHeight="31.0" prefWidth="56.0" text="Promień"/>
         <Button fx:id="embryosGeneratorButton" layoutX="631.0" layoutY="472.0" mnemonicParsing="false" prefHeight="31.0"
                 prefWidth="128.0" text="Generuj zarodki" textAlignment="CENTER" wrapText="true"/>
@@ -42,10 +45,10 @@
                textAlignment="CENTER" wrapText="true"/>
         <Label fx:id="scaleLabel" layoutX="668.0" layoutY="26.0" text="10 pikseli"/>
         <Button fx:id="resetButton" layoutX="634.0" layoutY="648.0" mnemonicParsing="false" prefHeight="31.0"
-                prefWidth="128.0" text="Wyczyść siatkę"/>
+                prefWidth="128.0" text="Resetuj ekran"/>
         <Label fx:id="neighbourhoodRayLabel" layoutX="52.0" layoutY="664.0" text="Promień"/>
-        <TextField fx:id="neighbourhoodRayTextField" layoutX="118.0" layoutY="659.0" prefHeight="31.0"
-                   prefWidth="86.0"/>
+        <TextField fx:id="neighbourhoodRayTextField" layoutX="118.0" layoutY="659.0" prefHeight="31.0" prefWidth="121.0"
+                   promptText="(ilość pikseli)"/>
         <ChoiceBox fx:id="hexagonalKindChoiceBox" layoutX="129.0" layoutY="659.0" prefWidth="150.0"/>
     </children>
 </AnchorPane>
