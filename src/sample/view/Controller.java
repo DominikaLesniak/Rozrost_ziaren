@@ -98,6 +98,8 @@ public class Controller implements Initializable {
         widthTextField.setText(currentGrid.getWidth() + "");
         heightTextField.setText(currentGrid.getHeight() + "");
         embryosGeneratorButton.setVisible(false);
+        embryosNumberLabel.setVisible(false);
+        embryosNumberTextField.setVisible(false);
         rayLabel.setVisible(false);
         rayTextField.setVisible(false);
         neighbourhoodRayTextField.setVisible(false);
@@ -187,6 +189,7 @@ public class Controller implements Initializable {
             boolean customModeOff = !CUSTOM_MODE_ON.apply(EMBRYO_MODE);
             embryosNumberTextField.setVisible(customModeOff);
             embryosGeneratorButton.setVisible(customModeOff);
+            embryosNumberLabel.setVisible(customModeOff);
             if (customModeOff)
                 deactivateCanvas();
             else
